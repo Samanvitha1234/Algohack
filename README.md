@@ -97,6 +97,3 @@ Verify backend health and chain wiring:
 
 curl http://localhost:8787/health
 
----
-
-If you want, I can also make this **more attractive with badges + emojis + GitHub styling** 🔥
