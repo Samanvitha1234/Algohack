@@ -1,0 +1,47 @@
+#pragma version 8
+txn ApplicationID
+int 0
+==
+bnz ok
+
+txn OnCompletion
+int NoOp
+==
+bnz handle_noop
+
+int 1
+return
+
+handle_noop:
+txna ApplicationArgs 0
+byte "setReporter"
+==
+bnz check_admin
+txna ApplicationArgs 0
+byte "setQuorum"
+==
+bnz check_admin
+txna ApplicationArgs 0
+byte "registerRound"
+==
+bnz ok
+txna ApplicationArgs 0
+byte "isReporter"
+==
+bnz ok
+txna ApplicationArgs 0
+byte "getQuorum"
+==
+bnz ok
+err
+
+check_admin:
+txn Sender
+global CreatorAddress
+==
+bnz ok
+err
+
+ok:
+int 1
+return
