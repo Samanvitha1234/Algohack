@@ -1,0 +1,36 @@
+#pragma version 8
+txn ApplicationID
+int 0
+==
+bnz ok
+
+txn OnCompletion
+int NoOp
+==
+bnz handle_noop
+
+int 1
+return
+
+handle_noop:
+txna ApplicationArgs 0
+byte "createMarket"
+==
+bnz ok
+txna ApplicationArgs 0
+byte "commitMatchBatch"
+==
+bnz ok
+txna ApplicationArgs 0
+byte "resolveMarket"
+==
+bnz ok
+txna ApplicationArgs 0
+byte "claim"
+==
+bnz ok
+err
+
+ok:
+int 1
+return

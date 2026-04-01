@@ -1,0 +1,84 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Market {
+  id           Int          @id @default(autoincrement())
+  question     String
+  category     String
+  description  String
+  endTime      BigInt
+  status       String
+  yesPrice     Float
+  noPrice      Float
+  volumeUsd    Float        @default(0)
+  participants Int          @default(0)
+  resolution   String?
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+  orders       Order[]
+  trades       Trade[]
+  claims       Claim[]
+}
+
+model Order {
+  id         String   @id
+  marketId   Int
+  wallet     String
+  side       String
+  outcome    String
+  price      Float
+  quantity   Float
+  remaining  Float
+  timestamp  BigInt
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  market     Market   @relation(fields: [marketId], references: [id], onDelete: Cascade)
+
+  @@index([marketId, outcome, side])
+}
+
+model Trade {
+  id         String   @id
+  marketId   Int
+  outcome    String
+  price      Float
+  quantity   Float
+  takerSide  String
+  buyWallet  String
+  sellWallet String
+  timestamp  BigInt
+  createdAt  DateTime @default(now())
+  market     Market   @relation(fields: [marketId], references: [id], onDelete: Cascade)
+
+  @@index([marketId, outcome])
+}
+
+model Claim {
+  id        String   @id @default(cuid())
+  marketId  Int
+  wallet    String
+  payout    Float
+  createdAt DateTime @default(now())
+  market    Market   @relation(fields: [marketId], references: [id], onDelete: Cascade)
+
+  @@unique([marketId, wallet])
+}
+
+model OracleRound {
+  id           String   @id
+  symbol       String
+  medianPrice  Float
+  minPrice     Float
+  maxPrice     Float
+  sourcesJson  String
+  signedByJson String
+  quorum       Boolean
+  timestamp    BigInt
+  createdAt    DateTime @default(now())
+}

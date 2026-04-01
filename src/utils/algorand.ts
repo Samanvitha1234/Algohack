@@ -28,7 +28,7 @@ export async function createAsset(form: Record<string, any>, account: string) {
   return Number(ptx.assetIndex);
 }
 
-async function waitForConfirmation(client: algosdk.Algodv2, txid: string, timeout: number) {
+export async function waitForConfirmation(client: algosdk.Algodv2, txid: string, timeout: number) {
   const status = await client.status().do();
   let currentRound =
     (typeof status.lastRound === "bigint" ? Number(status.lastRound) : status.lastRound) + 1;

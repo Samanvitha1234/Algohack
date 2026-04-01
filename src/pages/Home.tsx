@@ -38,7 +38,7 @@ const Home = () => {
       icon: <BarChart3 size={28} />,
       title: "Live Orderbook",
       desc: "View real-time trading data and market depth.",
-      onClick: () => navigate("/markets"),
+      onClick: () => navigate("/orderbook/1"),
     },
     {
       icon: <Wallet size={28} />,
